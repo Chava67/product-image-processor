@@ -1,0 +1,17 @@
+<div class="container mt-4">
+  <h2 class="mb-4 text-dark fw-bold border-bottom pb-2"> Image Processing Dashboard</h2>
+
+
+  <app-csv-import 
+    [message]="message" 
+    [isSuccess]="isSuccess" 
+    (textSubmitted)="handleSingleLine($event)"
+    (fileSubmitted)="handleBulkFile($event)">
+  </app-csv-import>
+
+  <app-product-table 
+    [products]="products"
+    (retryTriggered)="onHandleRetryTriggered($event)">
+  </app-product-table>
+  
+</div>

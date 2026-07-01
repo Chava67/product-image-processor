@@ -1,0 +1,176 @@
+<div class="card shadow-sm border-0 rounded-3 mt-4">
+  
+  <div class="row g-3 mb-3 bg-light p-3 rounded shadow-sm border mx-0">
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-secondary small"
+        >Search within table</label
+      >
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        name="search"
+        class="form-control"
+        placeholder="Search by SKU or Title..."
+      />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label fw-bold text-secondary small"
+        >Filter by Status</label
+      >
+      <select [(ngModel)]="statusFilter" name="status" class="form-select">
+        <option value="all">All Statuses</option>
+        <option value="queued">Queued 📥</option>
+        <option value="processing">Processing ⚙️</option>
+        <option value="processed">Processed ✅</option>
+        <option value="failed">Failed ❌</option>
+      </select>
+    </div>
+  </div>
+  <div class="card-body p-0">
+    <div class="table-responsive">
+      <table
+        class="table table-striped table-hover align-middle mb-0 text-center"
+      >
+        <thead class="table-light">
+          <tr>
+            <th scope="col" class="py-3">SKU</th>
+            <th scope="col" class="py-3">Title</th>
+            <th scope="col" class="py-3">Category</th>
+            <th scope="col" class="py-3">Status</th>
+            <th scope="col" class="py-3">Original Image</th>
+            <th scope="col" class="py-3">Processed Image (WebP)</th>
+            <th scope="col" class="py-3">Metadata</th>
+            <th scope="col" class="py-3">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngIf="products.length === 0">
+            <td colspan="6" class="text-center py-5 text-muted bg-white">
+              <p class="mb-0 fs-5 fw-semibold">No products found</p>
+              <small>Paste a CSV in the input above to get started!</small>
+            </td>
+          </tr>
+
+          <tr *ngFor="let prod of filteredProducts">
+            <td class="fw-bold text-primary">{{ prod.sku }}</td>
+            <td class="fw-semibold">{{ prod.title }}</td>
+            <td>
+              <span class="badge bg-light text-dark border">{{
+                prod.category
+              }}</span>
+            </td>
+            <td>
+              <span
+                [className]="
+                  getStatusClass(prod.status) + ' px-3 py-2 rounded-pill fs-7'
+                "
+              >
+                {{ prod.status | uppercase }}
+              </span>
+              <div *ngIf="prod.errorReason" class="text-danger small mt-1">
+                ⚠️ {{ prod.errorReason }}
+              </div>
+            </td>
+            <td>
+              <div
+                *ngIf="prod.imageMetadata?.originalS3Url"
+                class="image-container"
+              >
+                <a [href]="prod.imageMetadata.originalS3Url" target="_blank">
+                  <img
+                    [src]="prod.imageMetadata.originalS3Url"
+                    alt="Original"
+                    class="product-thumb img-thumbnail shadow-sm"
+                  />
+                </a>
+              </div>
+              <span
+                *ngIf="!prod.imageMetadata?.originalS3Url"
+                class="text-muted small"
+                >-</span
+              >
+            </td>
+
+            <td>
+              <div
+                *ngIf="prod.imageMetadata?.processedS3Url"
+                class="image-container"
+              >
+                <a [href]="prod.imageMetadata.processedS3Url" target="_blank">
+                  <img
+                    [src]="prod.imageMetadata.processedS3Url"
+                    alt="Processed"
+                    class="product-thumb img-thumbnail border-success shadow-sm"
+                  />
+                </a>
+              </div>
+
+              <span
+                *ngIf="
+                  !prod.imageMetadata?.processedS3Url &&
+                  prod.status !== 'failed'
+                "
+                class="text-warning small fw-medium d-flex align-items-center gap-1"
+              >
+                <span
+                  class="spinner-border spinner-border-sm"
+                  role="status"
+                ></span>
+                Processing...
+              </span>
+
+              <span
+                *ngIf="prod.status === 'failed'"
+                class="text-danger small fw-medium"
+                >❌ Failed</span
+              >
+            </td>
+            <td>
+              <div
+                *ngIf="prod.imageMetadata && prod.status === 'processed'"
+                class="small text-muted lh-sm"
+                style="font-size: 11px"
+              >
+                <div>
+                  📐 <b>Dimensions:</b> {{ prod.imageMetadata.width }}x{{
+                    prod.imageMetadata.height
+                  }}
+                  px
+                </div>
+                <div>📦 <b>Format:</b> {{ prod.imageMetadata.format }}</div>
+                <div>
+                  💾 <b>Weight:</b>
+                  {{
+                    prod.imageMetadata.originalSizeInBytes / 1024 / 1024
+                      | number: "1.1-2"
+                  }}
+                  MB
+                </div>
+                <div>
+                  ⚡ <b>Duration:</b>
+                  {{ prod.imageMetadata.processingDurationMs }}ms
+                </div>
+              </div>
+              <span *ngIf="prod.status !== 'processed'" class="text-muted small"
+                >-</span
+              >
+            </td>
+
+            <td>
+              <button
+                *ngIf="prod.status === 'failed'"
+                (click)="onRetryClick(prod._id)"
+                class="btn btn-sm btn-outline-danger shadow-sm py-1 px-2 fw-medium"
+              >
+                Retry 🔄
+              </button>
+              <span *ngIf="prod.status !== 'failed'" class="text-muted small"
+                >-</span
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

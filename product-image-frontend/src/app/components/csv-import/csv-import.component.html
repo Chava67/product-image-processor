@@ -1,0 +1,60 @@
+<div class="card shadow-sm border-0 rounded-3 mb-4">
+  <div class="card-header bg-light border-0 py-2 d-flex justify-content-between align-items-center">
+    <span class="fw-bold text-secondary">📥 Import Products via CSV</span>
+    <ul class="nav nav-pills small">
+      <li class="nav-item">
+        <button class="nav-link py-1 px-3" [class.active]="activeTab === 'text'" (click)="activeTab = 'text'">
+          ✏️ Paste Text
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link py-1 px-3" [class.active]="activeTab === 'file'" (click)="activeTab = 'file'">
+          📥 Upload File
+        </button>
+      </li>
+    </ul>
+  </div>
+
+  <div class="card-body p-4">
+    <div *ngIf="activeTab === 'text'">
+      <div class="mb-3">
+        <label for="csvTextArea" class="form-label fw-semibold text-muted small">CSV Format: sku,title,category,imageUrl</label>
+        <textarea 
+          id="csvTextArea"
+          class="form-control font-monospace p-3 bg-light border-0 rounded-3" 
+          rows="4" 
+          [(ngModel)]="csvInput"
+          placeholder="Format: sku,title,category,imageUrl (Example: PROD-1,Cute Cat,Animals,https://example.com/cat.jpg)">
+        </textarea>
+      </div>
+      
+      <button class="btn btn-primary btn-lg px-4 fs-6 fw-bold shadow-sm rounded-3" [disabled]="!csvInput.trim()" (click)="submitText()">
+        Process Images 🚀
+      </button>
+    </div>
+
+    <div *ngIf="activeTab === 'file'">
+      <div class="mb-4">
+        <label for="csvFileInput" class="form-label fw-semibold text-muted small">Select a .csv file from your computer</label>
+        <input 
+          type="file" 
+          id="csvFileInput" 
+          class="form-control font-monospace p-3 bg-light border-0 rounded-3" 
+          (change)="onFileSelected($event)" 
+          accept=".csv">
+      </div>
+
+      <div *ngIf="selectedFile" class="alert alert-info py-2 px-3 border-0 rounded-3 small mb-3 shadow-sm fw-medium text-success bg-success-subtle">
+        📎 Selected file: <strong>{{ selectedFile.name }}</strong> ({{ (selectedFile.size / 1024) | number:'1.0-1' }} KB)
+      </div>
+      
+      <button class="btn btn-success btn-lg px-4 fs-6 fw-bold shadow-sm rounded-3" [disabled]="!selectedFile" (click)="submitFile()">
+        Upload & Process Bulk 📦
+      </button>
+    </div>
+
+    <div *ngIf="message" class="mt-3 alert rounded-3 border-0 shadow-sm" [ngClass]="isSuccess ? 'alert-success' : 'alert-danger'">
+      {{ message }}
+    </div>
+  </div>
+</div>
