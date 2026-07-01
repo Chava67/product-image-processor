@@ -12,7 +12,7 @@ An asynchronous, serverless system designed to import products and process image
 
 ## 💻 Local Setup Instructions
 1. **Clone the repo:** `git clone https://github.com/Chava67/product-image-processor.git`
-2. **Backend Setup:** Run `npm install` inside the `/"Product Image Operations"` folder, create a `.env` like the .env.example, and start the server using `npm run dev`.
+2. **Backend Setup:** Open a terminal and navigate to the `/"Product Image Operations"` folder. Run `npm install`, create a `.env` file following the `.env.example` structure, and start the API server using `npm run dev`. Then, open an additional terminal window and execute the image processing worker script by `node index.js`
 3. **Frontend Setup:** Run `npm install` inside the `/product-image-frontend` folder, update the API URL in `environment.ts`, and run `ng serve`.
 
 ---
