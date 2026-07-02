@@ -5,9 +5,8 @@ An asynchronous, serverless system designed to import products and process image
 ---
 
 ## 🔗 Live Deployments
-* **Frontend URL:** `(http://candidate-product-image-frontend.s3-website.eu-central-1.amazonaws.com/)`
-\
-
+* **Frontend URL:** `http://candidate-product-image-frontend.s3-website.eu-central-1.amazonaws.com/`
+* **API Gateway URL:** `https://qoerim2et5.execute-api.eu-central-1.amazonaws.com/api/products`
 ---
 
 ## 💻 Local Setup Instructions
